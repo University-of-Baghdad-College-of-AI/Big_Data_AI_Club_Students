@@ -338,22 +338,109 @@
       container.appendChild(next);
     }
 
-    // Override applyFilters to reset to page 1 after filtering
-    var _origApplyFilters = applyFilters;
-    applyFilters = function() {
-      // Restore all cards to their natural display first
-      document.querySelectorAll('.card').forEach(function(c) {
-        c.style.display = '';
-      });
-      // Apply type/year filters
-      document.querySelectorAll('.card').forEach(function(card) {
+
+    // ── Filters + Pagination ──
+    var activeType = 'all';
+    var activeYear = 'all';
+    var ITEMS_PER_PAGE = 9;
+    var currentPage = 1;
+
+    function applyFilters() {
+      currentPage = 1;
+      renderPage();
+    }
+
+    function renderPage() {
+      var allCards = Array.from(document.querySelectorAll('.card'));
+
+      // Step 1: determine which cards match filters
+      var matched = allCards.filter(function(card) {
         var typeMatch = activeType === 'all' || card.dataset.type === activeType;
         var yearMatch = activeYear === 'all' || card.dataset.year === activeYear;
-        if (!typeMatch || !yearMatch) card.style.display = 'none';
+        return typeMatch && yearMatch;
       });
-      currentPage = 1;
-      renderPage(1);
-    };
+
+      var total = matched.length;
+      var totalPages = Math.max(1, Math.ceil(total / ITEMS_PER_PAGE));
+      if (currentPage > totalPages) currentPage = totalPages;
+
+      var start = (currentPage - 1) * ITEMS_PER_PAGE;
+      var end   = start + ITEMS_PER_PAGE;
+
+      // Step 2: show/hide all cards
+      allCards.forEach(function(card) {
+        card.style.display = 'none';
+      });
+      matched.forEach(function(card, i) {
+        card.style.display = (i >= start && i < end) ? '' : 'none';
+      });
+
+      // Step 3: results count
+      var rc = document.getElementById('resultsCount');
+      if (rc) {
+        rc.innerHTML = '<strong>' + total + '</strong> result' + (total !== 1 ? 's' : '') + ' found' +
+          (totalPages > 1 ? ' &nbsp;|&nbsp; Page ' + currentPage + ' of ' + totalPages : '');
+      }
+
+      // Step 4: no results message
+      var nr = document.getElementById('noResults');
+      if (nr) nr.style.display = total === 0 ? 'block' : 'none';
+
+      // Step 5: pagination buttons
+      var container = document.getElementById('pagination');
+      if (container) {
+        container.innerHTML = '';
+        if (totalPages > 1) {
+          // Prev
+          var prev = document.createElement('button');
+          prev.className = 'page-btn prev-next';
+          prev.innerHTML = '&#8592; Prev';
+          prev.disabled = currentPage === 1;
+          prev.onclick = function() { currentPage--; renderPage(); window.scrollTo({top:0,behavior:'smooth'}); };
+          container.appendChild(prev);
+          // Pages
+          for (var p = 1; p <= totalPages; p++) {
+            (function(pg) {
+              var btn = document.createElement('button');
+              btn.className = 'page-btn' + (pg === currentPage ? ' active' : '');
+              btn.textContent = pg;
+              btn.onclick = function() { currentPage = pg; renderPage(); window.scrollTo({top:0,behavior:'smooth'}); };
+              container.appendChild(btn);
+            })(p);
+          }
+          // Next
+          var next = document.createElement('button');
+          next.className = 'page-btn prev-next';
+          next.innerHTML = 'Next &#8594;';
+          next.disabled = currentPage === totalPages;
+          next.onclick = function() { currentPage++; renderPage(); window.scrollTo({top:0,behavior:'smooth'}); };
+          container.appendChild(next);
+        }
+      }
+    }
+
+    // Type filter clicks
+    document.querySelectorAll('#typeFilters .filter-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('#typeFilters .filter-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        activeType = btn.dataset.type;
+        applyFilters();
+      });
+    });
+
+    // Year filter clicks
+    document.querySelectorAll('#yearFilters .filter-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('#yearFilters .filter-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        activeYear = btn.dataset.year;
+        applyFilters();
+      });
+    });
+
+    // Init
+    renderPage();
 
     // Init on load
     renderPage(1);
