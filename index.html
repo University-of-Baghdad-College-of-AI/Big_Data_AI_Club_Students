@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Students Work - Big Data AI Club</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0F1F3D; --indigo: #4361EE; --indigo-light: #6B83F2;
+      --indigo-pale: #EEF2FF; --gold: #F8C200; --white: #FFFFFF;
+      --surface: #F4F6FA; --card: #FFFFFF; --border: #E2E7F0;
+      --text-main: #1A2340; --text-muted: #5E6E8A;
+      --shadow-sm: 0 2px 8px rgba(15,31,61,0.08);
+      --shadow-md: 0 6px 24px rgba(15,31,61,0.13);
+      --radius: 12px;
+    }
+    html { font-family: 'Inter', system-ui, sans-serif; font-size: 16px; color: var(--text-main); background: var(--surface); line-height: 1.65; -webkit-font-smoothing: antialiased; }
+
+    /* Header */
+    header { text-align: center; padding: 32px 24px 24px; background: var(--white); border-bottom: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+    .logo-container { display: flex; justify-content: center; align-items: center; gap: 28px; margin-bottom: 14px; flex-wrap: wrap; }
+    .club-logo { height: 68px; max-width: 180px; object-fit: contain; transition: transform 0.25s; }
+    .club-logo:hover { transform: scale(1.05); }
+    header h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2em; font-weight: 800; color: var(--navy); margin: 0 0 6px; letter-spacing: -0.4px; }
+    header h1 a { color: inherit; text-decoration: none; }
+    header p { font-size: 0.97em; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Nav */
+    nav { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; background: var(--navy); padding: 0 16px; box-shadow: 0 4px 16px rgba(15,31,61,0.2); position: sticky; top: 0; z-index: 100; }
+    nav a { color: rgba(255,255,255,0.85); text-decoration: none; padding: 15px 16px; font-size: 0.9em; font-weight: 600; transition: color 0.18s, background 0.18s; position: relative; display: inline-block; white-space: nowrap; }
+    nav a:hover { color: var(--white); background: rgba(255,255,255,0.08); border-radius: 6px; }
+    nav a::after { content:''; position:absolute; bottom:8px; left:16px; right:16px; height:2px; background:var(--gold); border-radius:2px; transform:scaleX(0); transition:transform 0.22s; }
+    nav a:hover::after { transform: scaleX(1); }
+
+    /* Section */
+    section { max-width: 1040px; margin: 36px auto; padding: 36px 40px; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow-sm); border: 1px solid var(--border); border-left: 4px solid var(--indigo); transition: box-shadow 0.25s; }
+    section:hover { box-shadow: var(--shadow-md); }
+    section h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.45em; font-weight: 700; color: var(--navy); margin: 0 0 16px; display: flex; align-items: center; gap: 10px; }
+    section h2::before { content:''; display:inline-block; width:7px; height:7px; background:var(--indigo); border-radius:50%; flex-shrink:0; }
+    section p { color: var(--text-muted); line-height: 1.75; margin-bottom: 12px; }
+
+    /* Filter bar */
+    .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+    .filter-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.82em; font-weight: 600; padding: 6px 16px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--white); color: var(--text-muted); cursor: pointer; transition: all 0.18s; }
+    .filter-btn:hover, .filter-btn.active { background: var(--indigo); color: var(--white); border-color: var(--indigo); }
+
+    /* Cards grid */
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 20px; transition: box-shadow 0.2s, transform 0.2s; display: flex; flex-direction: column; gap: 10px; }
+    .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .card-type { display: inline-block; font-size: 0.72em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; background: var(--indigo-pale); color: var(--indigo); }
+    .card-type.research { background: #EDF7EE; color: #2E7D32; }
+    .card-type.software { background: #FFF3E0; color: #E65100; }
+    .card-type.data { background: #F3E5F5; color: #6A1B9A; }
+    .card h3 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1em; font-weight: 700; color: var(--navy); line-height: 1.3; }
+    .card p { font-size: 0.87em; color: var(--text-muted); line-height: 1.55; flex: 1; }
+    .card-meta { font-size: 0.78em; color: var(--text-muted); display: flex; gap: 12px; flex-wrap: wrap; }
+    .card-meta span { display: flex; align-items: center; gap: 4px; }
+    .card a { display: inline-flex; align-items: center; gap: 6px; font-size: 0.83em; font-weight: 600; color: var(--indigo); text-decoration: none; margin-top: 4px; transition: gap 0.2s; }
+    .card a:hover { gap: 10px; }
+
+    /* Empty state */
+    .empty { text-align: center; padding: 48px 20px; color: var(--text-muted); }
+    .empty svg { margin-bottom: 14px; opacity: 0.3; }
+
+    /* Footer */
+    footer { text-align: center; padding: 28px 24px; background: var(--navy); color: rgba(255,255,255,0.65); font-size: 0.86em; margin-top: 52px; line-height: 1.9; }
+    footer strong { color: rgba(255,255,255,0.92); font-weight: 600; }
+    footer a { color: rgba(255,255,255,0.75); text-decoration: none; }
+    footer a:hover { color: var(--white); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      header { padding: 24px 20px 18px; }
+      header h1 { font-size: 1.35em; }
+      .club-logo { height: 52px; }
+      section { margin: 16px 12px; padding: 22px 18px; }
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      header h1 { font-size: 1.15em; }
+      .club-logo { height: 44px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-container">
+      <a href="https://uobaghdad.edu.iq/" target="_blank">
+        <img src="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/logo3.png" alt="University of Baghdad Logo" class="club-logo">
+      </a>
+      <a href="https://en.coai.uobaghdad.edu.iq/" target="_blank">
+        <img src="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/coai-english-logo.png" alt="College of AI Logo" class="club-logo">
+      </a>
+    </div>
+    <h1><a href="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/">Big Data Artificial Intelligence Club</a></h1>
+    <p>Students Work Repository</p>
+  </header>
+
+  <nav>
+    <a href="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/">&#8592; Back to Main Site</a>
+    <a href="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/submit.html">Submit Work</a>
+    <a href="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Professors/">Professors Work</a>
+  </nav>
+
+  <section>
+    <h2>&#127891; Students Work</h2>
+    <p>This repository showcases work submitted by students of the Big Data Artificial Intelligence Club. Browse projects, research papers, and software contributions below.</p>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
+      <button class="filter-btn" onclick="filterCards('research', this)">Research</button>
+      <button class="filter-btn" onclick="filterCards('software', this)">Software</button>
+      <button class="filter-btn" onclick="filterCards('data', this)">Data Analysis</button>
+      <button class="filter-btn" onclick="filterCards('ai', this)">AI Model</button>
+    </div>
+
+    <div class="cards-grid" id="cardsGrid">
+
+      <!-- ══════════════════════════════════════
+           ADD STUDENT SUBMISSIONS BELOW
+           Copy a card block and fill in details
+           ══════════════════════════════════════ -->
+
+      <div class="card" data-type="research">
+        <span class="card-type research">Research</span>
+        <h3>Big Data Clustering Techniques for Large-Scale Datasets</h3>
+        <p>A research paper exploring novel clustering algorithms applied to large-scale educational datasets at the University of Baghdad.</p>
+        <div class="card-meta">
+          <span>&#128100; Ahmed Al-Rashidi</span>
+          <span>&#128197; June 2026</span>
+        </div>
+        <a href="#">View Paper &#8594;</a>
+      </div>
+
+      <div class="card" data-type="ai">
+        <span class="card-type">AI Model</span>
+        <h3>Arabic Text Classification using Transformer Models</h3>
+        <p>A parameter-efficient fine-tuning approach for classifying Arabic text across multiple domains using BERT-based architectures.</p>
+        <div class="card-meta">
+          <span>&#128100; Sara Mohammed</span>
+          <span>&#128197; May 2026</span>
+        </div>
+        <a href="#">View Project &#8594;</a>
+      </div>
+
+      <div class="card" data-type="software">
+        <span class="card-type software">Software</span>
+        <h3>Smart Campus IoT Dashboard</h3>
+        <p>A real-time web dashboard aggregating IoT sensor data from across the College of AI campus, built with Python and React.</p>
+        <div class="card-meta">
+          <span>&#128100; Ali Hassan</span>
+          <span>&#128197; April 2026</span>
+        </div>
+        <a href="#">View Project &#8594;</a>
+      </div>
+
+      <div class="card" data-type="data">
+        <span class="card-type data">Data Analysis</span>
+        <h3>Student Performance Predictive Analytics</h3>
+        <p>Using academic records and behavioral data to predict student outcomes and provide early intervention recommendations.</p>
+        <div class="card-meta">
+          <span>&#128100; Noor Khalid</span>
+          <span>&#128197; March 2026</span>
+        </div>
+        <a href="#">View Report &#8594;</a>
+      </div>
+
+      <!-- ADD MORE CARDS HERE -->
+
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 <strong>Big Data Artificial Intelligence Club</strong> | Students Work Repository</p>
+    <p>Big Data Department | College of AI | University of Baghdad</p>
+    <p style="margin-top:6px;"><a href="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/">&#8592; Back to Main Website</a></p>
+  </footer>
+
+  <script>
+    function filterCards(type, btn) {
+      document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.querySelectorAll('.card').forEach(function(card) {
+        card.style.display = (type === 'all' || card.dataset.type === type) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>
