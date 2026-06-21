@@ -91,6 +91,59 @@
     @media(max-width:768px){header{padding:24px 20px 18px;}header h1{font-size:1.35em;}.club-logo{height:52px;}section{margin:16px 12px;padding:22px 18px;}.cards-grid{grid-template-columns:1fr;}.filter-row{gap:16px;}.modal-body,.modal-header{padding-left:20px;padding-right:20px;}}
     section{border-left:4px solid var(--indigo);}
     section h2::before{background:var(--indigo);}
+  
+    /* Search bar */
+    .search-bar {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .search-bar input {
+      width: 100%;
+      padding: 12px 44px 12px 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95em;
+      color: var(--text-main);
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-bar input:focus {
+      border-color: var(--indigo);
+      box-shadow: 0 0 0 3px rgba(67,97,238,0.12);
+    }
+    .search-bar input::placeholder { color: #B0BCD0; }
+    .search-icon {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+      font-size: 1em;
+    }
+    .search-bar .clear-btn {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 1.1em;
+      display: none;
+      padding: 0;
+    }
+    .search-bar input:not(:placeholder-shown) ~ .clear-btn { display: block; }
+    .search-bar input:not(:placeholder-shown) ~ .search-icon { display: none; }
+    mark {
+      background: #FFF3CD;
+      color: var(--navy);
+      border-radius: 2px;
+      padding: 0 1px;
+    }
   </style>
 </head>
 <body>
@@ -110,6 +163,11 @@
   <section>
     <h2>&#127891; Students Work</h2>
     <p>Browse projects, research, and contributions by club students. Data loaded from the repository.</p>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="&#128269; Search by title, description, author...">
+      <span class="search-icon">&#128269;</span>
+      <button class="clear-btn" onclick="document.getElementById('searchInput').value='';document.getElementById('searchInput').dispatchEvent(new Event('input'))">&#10005;</button>
+    </div>
     <div class="filter-row">
       <div class="filter-group">
         <label>By Type</label>
@@ -157,7 +215,7 @@
     <p>Big Data Department | College of AI | University of Baghdad</p>
     <p style="margin-top:6px;"><a href="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/">&#8592; Back to Main Website</a></p>
   </footer>
-      <script>
+        <script>
     var allData = [
 
   {
@@ -232,8 +290,18 @@
 
 ];
 
-    var activeType = 'all', activeYear = 'all';
+    var activeType = 'all', activeYear = 'all', searchQuery = '';
     var ITEMS_PER_PAGE = 9, currentPage = 1;
+
+    // Search input
+    var searchInput = document.getElementById('searchInput');
+    if(searchInput){
+      searchInput.addEventListener('input', function(){
+        searchQuery = this.value.toLowerCase().trim();
+        currentPage = 1;
+        renderPage();
+      });
+    }
 
     function buildYearFilters(data) {
       var years = [];
@@ -272,28 +340,45 @@
       return map[t]||t;
     }
 
-    // Use index to avoid passing JSON through HTML attributes
+    function highlight(text, query){
+      if(!query) return text;
+      var escaped = query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+      return text.replace(new RegExp('('+escaped+')', 'gi'), '<mark>$1</mark>');
+    }
+
     function cardHTML(d, idx){
+      var q = searchQuery;
       return '<div class="card">' +
         '<div class="card-badges">' +
           '<span class="badge badge-'+(d.type||'file')+'">'+typeLabel(d.type||'file')+'</span>' +
           '<span class="badge badge-year">'+(d.year||'')+'</span>' +
         '</div>' +
-        '<h3>'+(d.title||'')+'</h3>' +
-        '<p>'+(d.desc||'')+'</p>' +
+        '<h3>'+highlight(d.title||'', q)+'</h3>' +
+        '<p>'+highlight(d.desc||'', q)+'</p>' +
         '<div class="card-meta">' +
-          '<span>&#128100; '+(d.who||'')+'</span>' +
+          '<span>&#128100; '+highlight(d.who||'', q)+'</span>' +
           '<span>&#128197; '+(d.date||'')+'</span>' +
         '</div>' +
         '<button class="view-btn" data-idx="'+idx+'">View Details &#8594;</button>' +
       '</div>';
     }
 
+    function matchesSearch(d){
+      if(!searchQuery) return true;
+      var q = searchQuery;
+      return (d.title||'').toLowerCase().indexOf(q)!==-1 ||
+             (d.desc||'').toLowerCase().indexOf(q)!==-1 ||
+             (d.who||'').toLowerCase().indexOf(q)!==-1 ||
+             (d.type||'').toLowerCase().indexOf(q)!==-1 ||
+             (d.year||'').toLowerCase().indexOf(q)!==-1;
+    }
+
     function renderPage(){
-      var matched = [];
-      var matchedIdx = [];
+      var matched = [], matchedIdx = [];
       allData.forEach(function(d, i){
-        if((activeType==='all'||d.type===activeType) && (activeYear==='all'||d.year===activeYear)){
+        if((activeType==='all'||d.type===activeType) &&
+           (activeYear==='all'||d.year===activeYear) &&
+           matchesSearch(d)){
           matched.push(d);
           matchedIdx.push(i);
         }
@@ -308,7 +393,6 @@
       var grid = document.getElementById('cardsGrid');
       grid.innerHTML = slice.map(function(d,i){ return cardHTML(d, sliceIdx[i]); }).join('');
 
-      // Attach click handlers after rendering
       grid.querySelectorAll('.view-btn').forEach(function(btn){
         btn.addEventListener('click', function(){
           openModal(allData[parseInt(btn.dataset.idx)]);
@@ -317,6 +401,7 @@
 
       var rc = document.getElementById('resultsCount');
       if(rc) rc.innerHTML = '<strong>'+total+'</strong> result'+(total!==1?'s':'')+' found'+
+        (searchQuery?' for <em>"'+searchQuery+'"</em>':'')+
         (totalPages>1?' &nbsp;|&nbsp; Page '+currentPage+' of '+totalPages:'');
       var nr = document.getElementById('noResults');
       if(nr) nr.style.display = total===0?'block':'none';
@@ -349,32 +434,27 @@
       document.getElementById('modalDate').textContent  = d.date||'—';
       var lnk = document.getElementById('modalLink');
       if(d.link && d.link!=='#'){
-        lnk.href = d.link;
-        lnk.style.display = 'inline-flex';
-        lnk.onclick = null;
+        lnk.href=d.link; lnk.style.display='inline-flex'; lnk.onclick=null;
       } else {
-        lnk.href = '#';
-        lnk.style.display = 'inline-flex';
-        lnk.onclick = function(e){ e.preventDefault(); alert('No link available for this item yet.'); };
+        lnk.href='#'; lnk.style.display='inline-flex';
+        lnk.onclick=function(e){ e.preventDefault(); alert('No link available for this item yet.'); };
       }
       document.getElementById('modal').classList.add('open');
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow='hidden';
     }
-
     function closeModal(){
       document.getElementById('modal').classList.remove('open');
-      document.body.style.overflow = '';
+      document.body.style.overflow='';
     }
-    document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
+    document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeModal(); });
 
     document.querySelectorAll('#typeFilters .filter-btn').forEach(function(btn){
-      btn.addEventListener('click', function(){
+      btn.addEventListener('click',function(){
         document.querySelectorAll('#typeFilters .filter-btn').forEach(function(b){b.classList.remove('active');});
         btn.classList.add('active'); activeType=btn.dataset.type; applyFilters();
       });
     });
 
-    // Mobile nav
     var toggle=document.querySelector('.nav-toggle'), navLinks=document.querySelector('.nav-links');
     if(toggle&&navLinks){
       toggle.addEventListener('click',function(){navLinks.classList.toggle('open');});
@@ -391,27 +471,23 @@
     
     fetch('https://api.github.com/repos/University-of-Baghdad-College-of-AI/Big_Data_AI_Club_Students/contents/submissions',
       {headers:{'Accept':'application/vnd.github.v3+json'}})
-      .then(function(r){ return r.json(); })
-      .then(function(folders){
+      .then(function(r){return r.json();}).then(function(folders){
         if(!Array.isArray(folders)) return;
-        var promises = folders.filter(function(f){ return f.type==='dir'; }).map(function(folder){
+        var promises=folders.filter(function(f){return f.type==='dir';}).map(function(folder){
           return fetch(folder.url,{headers:{'Accept':'application/vnd.github.v3+json'}})
-            .then(function(r){ return r.json(); })
-            .then(function(files){
+            .then(function(r){return r.json();}).then(function(files){
               if(!Array.isArray(files)) return [];
-              return files.filter(function(f){ return f.type==='file'; }).map(function(file){
-                var name = file.name.replace(/\.(pdf|zip)$/i,'').replace(/[-_]/g,' ');
+              return files.filter(function(f){return f.type==='file';}).map(function(file){
+                var name=file.name.replace(/\.(pdf|zip)$/i,'').replace(/[-_]/g,' ');
                 return {type:'file',year:folder.name,title:name,desc:'Uploaded: '+file.name,who:'Student',date:folder.name,link:file.download_url};
               });
             });
         });
         return Promise.all(promises);
-      })
-      .then(function(groups){
-        if(Array.isArray(groups)) groups.forEach(function(g){ if(Array.isArray(g)) allData=allData.concat(g); });
+      }).then(function(groups){
+        if(Array.isArray(groups)) groups.forEach(function(g){if(Array.isArray(g)) allData=allData.concat(g);});
         buildYearFilters(allData); renderPage();
-      })
-      .catch(function(){});
+      }).catch(function(){});
 
     buildYearFilters(allData);
     renderPage();
