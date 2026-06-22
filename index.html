@@ -231,10 +231,10 @@
   {
     "type"  : "ai",
     "year"  : "2026",
-    "title" : "AI Hackathon Baghdad - 1st Place",
-    "desc"  : "Innovative ML solution that won 1st place at the National AI Hackathon 2026.",
+    "title" : "AI Hackathon Baghdad — 2nd Place",
+    "desc"  : "Innovative ML solution that won 2nd place at the National AI Hackathon 2026.",
     "who"   : "Club Team",
-    "date"  : "April 2026",
+    "date"  : "June 2026",
     "link"  : "#"
   },
 
@@ -243,7 +243,7 @@
     "year"  : "2026",
     "title" : "Arabic Text Classification using Transformers",
     "desc"  : "Parameter-efficient fine-tuning for classifying Arabic text across multiple domains.",
-    "who"   : "Mohammed Ali",
+    "who"   : "Sara Mohammed",
     "date"  : "May 2026",
     "link"  : "#"
   },
@@ -263,7 +263,7 @@
     "year"  : "2025",
     "title" : "Student Performance Predictive Analytics",
     "desc"  : "Using academic records to predict student outcomes and provide early interventions.",
-    "who"   : "Ali Khalid",
+    "who"   : "Noor Khalid",
     "date"  : "March 2025",
     "link"  : "#"
   },
@@ -479,7 +479,10 @@
               if(!Array.isArray(files)) return [];
               return files.filter(function(f){return f.type==='file';}).map(function(file){
                 var name=file.name.replace(/\.(pdf|zip)$/i,'').replace(/[-_]/g,' ');
-                return {type:'file',year:folder.name,title:name,desc:'Uploaded: '+file.name,who:'Student',date:folder.name,link:file.download_url};
+                var parts = file.name.replace(/\.(pdf|zip)$/i,'').split('_');
+                var who = parts.length > 1 ? parts[0].replace(/-/g,' ') : 'Student';
+                var title = parts.length > 1 ? parts.slice(1).join(' ').replace(/-/g,' ') : parts[0].replace(/-/g,' ');
+                return {type:'file',year:folder.name,title:title,desc:'Uploaded file by '+who+': '+file.name,who:who,date:folder.name,link:file.download_url};
               });
             });
         });
