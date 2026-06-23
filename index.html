@@ -406,8 +406,81 @@
     <p>Big Data Department | College of AI | University of Baghdad</p>
     <p style="margin-top:6px;"><a href="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/">&#8592; Back to Main Website</a></p>
   </footer>
-            <script>
-    var allData = [];
+              <script>
+    var allData = [
+
+  {
+    "type"  : "research",
+    "year"  : "2026",
+    "title" : "Big Data Clustering Techniques",
+    "desc"  : "Novel clustering algorithms applied to large-scale educational datasets at the University of Baghdad.",
+    "who"   : "Ahmed Ali",
+    "date"  : "June 2026",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "ai",
+    "year"  : "2026",
+    "title" : "AI Hackathon Baghdad — 2nd Place",
+    "desc"  : "Innovative ML solution that won 2nd place at the National AI Hackathon 2026.",
+    "who"   : "Club Team",
+    "date"  : "June 2026",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "ai",
+    "year"  : "2026",
+    "title" : "Arabic Text Classification using Transformers",
+    "desc"  : "Parameter-efficient fine-tuning for classifying Arabic text across multiple domains using BERT adapters.",
+    "who"   : "Sara Mohammed",
+    "date"  : "May 2026",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "software",
+    "year"  : "2025",
+    "title" : "Smart Campus IoT Dashboard",
+    "desc"  : "Real-time dashboard aggregating IoT sensor data from across the College of AI campus facilities.",
+    "who"   : "Ali Hassan",
+    "date"  : "April 2025",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "data",
+    "year"  : "2025",
+    "title" : "Student Performance Predictive Analytics",
+    "desc"  : "Using academic records to predict student outcomes and provide early intervention recommendations.",
+    "who"   : "Noor Khalid",
+    "date"  : "March 2025",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "ai",
+    "year"  : "2024",
+    "title" : "Arabic Sentiment Analysis using BERT",
+    "desc"  : "Fine-tuned Arabic BERT model for sentiment classification on social media datasets.",
+    "who"   : "Club Members",
+    "date"  : "November 2024",
+    "link"  : "#"
+  },
+
+  {
+    "type"  : "software",
+    "year"  : "2024",
+    "title" : "Data Analysis Toolkit",
+    "desc"  : "Reusable Python tools for data cleaning, transformation, and visualization for data science workflows.",
+    "who"   : "Club Members",
+    "date"  : "September 2024",
+    "link"  : "#"
+  }
+
+];
+
     var activeType = 'all', activeYear = 'all', searchQuery = '';
     var ITEMS_PER_PAGE = 9, currentPage = 1;
 
@@ -436,10 +509,13 @@
     }
 
     function typeLabel(t){
-      var map={research:'Research',software:'Software',data:'Data Analysis',ai:'AI Model',
-        publication:'Publication',lecture:'Lecture',workshop:'Workshop',resource:'Resource',
-        project:'Project',presentation:'Presentation',seminar:'Seminar',
-        conference:'Conference',file:'File'};
+      var map={ml:'Machine Learning',bigdata:'Big Data',programming:'Programming',tools:'Tools',
+        ai:'AI',nlp:'NLP',bio:'Bioinformatics',ethics:'Ethics',data:'Data Science',
+        career:'Career',project:'Project',research:'Research',demo:'Demo',keynote:'Keynote',
+        trend:'Trend',industry:'Industry',discussion:'Discussion',national:'National',
+        international:'International',local:'Local',organized:'Organized',tech:'Tech Company',
+        lab:'Research Lab',uni:'University',gov:'Government',software:'Software',
+        publication:'Publication',lecture:'Lecture',workshop:'Workshop',resource:'Resource',file:'File'};
       return map[t]||t;
     }
 
@@ -475,38 +551,34 @@
     }
 
     function renderPage(){
-      var matched = [], matchedIdx = [];
-      allData.forEach(function(d, i){
-        if((activeType==='all'||d.type===activeType) &&
-           (activeYear==='all'||d.year===activeYear) &&
-           matchesSearch(d)){
+      var matched=[], matchedIdx=[];
+      allData.forEach(function(d,i){
+        if((activeType==='all'||d.type===activeType)&&
+           (activeYear==='all'||d.year===activeYear)&&matchesSearch(d)){
           matched.push(d); matchedIdx.push(i);
         }
       });
-      var total = matched.length;
-      var totalPages = Math.max(1, Math.ceil(total/ITEMS_PER_PAGE));
+      var total=matched.length, totalPages=Math.max(1,Math.ceil(total/ITEMS_PER_PAGE));
       if(currentPage>totalPages) currentPage=totalPages;
-      var start = (currentPage-1)*ITEMS_PER_PAGE;
-      var slice = matched.slice(start, start+ITEMS_PER_PAGE);
-      var sliceIdx = matchedIdx.slice(start, start+ITEMS_PER_PAGE);
-      var grid = document.getElementById('cardsGrid');
-      if(total===0){
-        grid.innerHTML = '<p style="color:var(--text-muted);grid-column:1/-1;text-align:center;padding:40px;">No submissions yet.</p>';
-      } else {
-        grid.innerHTML = slice.map(function(d,i){ return cardHTML(d, sliceIdx[i]); }).join('');
-        grid.querySelectorAll('.view-btn').forEach(function(btn){
-          btn.addEventListener('click', function(){ openModal(allData[parseInt(btn.dataset.idx)]); });
-        });
-      }
-      var rc = document.getElementById('resultsCount');
-      if(rc) rc.innerHTML = '<strong>'+total+'</strong> submission'+(total!==1?'s':'')+' found'+
+      var start=(currentPage-1)*ITEMS_PER_PAGE;
+      var slice=matched.slice(start,start+ITEMS_PER_PAGE);
+      var sliceIdx=matchedIdx.slice(start,start+ITEMS_PER_PAGE);
+      var grid=document.getElementById('cardsGrid');
+      grid.innerHTML=slice.map(function(d,i){ return cardHTML(d,sliceIdx[i]); }).join('');
+      grid.querySelectorAll('.view-btn').forEach(function(btn){
+        btn.addEventListener('click',function(){ openModal(allData[parseInt(btn.dataset.idx)]); });
+      });
+      var rc=document.getElementById('resultsCount');
+      if(rc) rc.innerHTML='<strong>'+total+'</strong> result'+(total!==1?'s':'')+' found'+
         (searchQuery?' for <em>"'+searchQuery+'"</em>':'')+
         (totalPages>1?' &nbsp;|&nbsp; Page '+currentPage+' of '+totalPages:'');
+      var nr=document.getElementById('noResults');
+      if(nr) nr.style.display=total===0?'block':'none';
       renderPagination(totalPages);
     }
 
     function renderPagination(totalPages){
-      var pg = document.getElementById('pagination');
+      var pg=document.getElementById('pagination');
       if(!pg) return; pg.innerHTML='';
       if(totalPages<=1) return;
       function mkBtn(label,p,disabled,active){
@@ -525,17 +597,14 @@
       document.getElementById('modalBadges').innerHTML=
         '<span class="badge badge-'+(d.type||'file')+'">'+typeLabel(d.type||'file')+'</span>'+
         '<span class="badge badge-year">'+(d.year||'')+'</span>';
-      document.getElementById('modalTitle').textContent = d.title||'';
-      document.getElementById('modalDesc').textContent  = d.desc||'No description available.';
-      document.getElementById('modalWho').textContent   = d.who||'—';
-      document.getElementById('modalDate').textContent  = d.date||d.year||'—';
-      var lnk = document.getElementById('modalLink');
-      if(d.link&&d.link!=='#'){
-        lnk.href=d.link; lnk.style.display='inline-flex'; lnk.onclick=null;
-      } else {
-        lnk.href='#'; lnk.style.display='inline-flex';
-        lnk.onclick=function(e){e.preventDefault();alert('No link available yet.');};
-      }
+      document.getElementById('modalTitle').textContent=d.title||'';
+      document.getElementById('modalDesc').textContent=d.desc||'No description available.';
+      document.getElementById('modalWho').textContent=d.who||'—';
+      document.getElementById('modalDate').textContent=d.date||d.year||'—';
+      var lnk=document.getElementById('modalLink');
+      if(d.link&&d.link!=='#'){lnk.href=d.link;lnk.style.display='inline-flex';lnk.onclick=null;}
+      else{lnk.href='#';lnk.style.display='inline-flex';
+        lnk.onclick=function(e){e.preventDefault();alert('No link available yet.');};}
       document.getElementById('modal').classList.add('open');
       document.body.style.overflow='hidden';
     }
@@ -545,11 +614,11 @@
     }
     document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
 
-    var searchInput = document.getElementById('searchInput');
+    var searchInput=document.getElementById('searchInput');
     if(searchInput){
-      searchInput.addEventListener('input', function(){
-        searchQuery = this.value.toLowerCase().trim();
-        currentPage = 1; renderPage();
+      searchInput.addEventListener('input',function(){
+        searchQuery=this.value.toLowerCase().trim();
+        currentPage=1; renderPage();
       });
     }
 
@@ -560,69 +629,43 @@
       });
     });
 
-    // Fetch submissions from GitHub
-    // For each .json file found, use its metadata
-    // For .pdf/.zip without a matching .json, use filename parsing as fallback
-    document.getElementById('cardsGrid').innerHTML =
-      '<p style="color:var(--text-muted);font-size:.9em;padding:20px;">Loading submissions...</p>';
-
+    // Init with inline data first, then augment with GitHub uploads
+    buildYearFilters(allData);
+    renderPage();
+    
+    // Fetch uploaded files from GitHub submissions folder
     fetch('https://api.github.com/repos/University-of-Baghdad-College-of-AI/Big_Data_AI_Club_Students/contents/submissions',
       {headers:{'Accept':'application/vnd.github.v3+json','X-GitHub-Api-Version':'2022-11-28'}})
       .then(function(r){ return r.ok ? r.json() : []; })
       .then(function(folders){
-        if(!Array.isArray(folders)){ renderPage(); return; }
+        if(!Array.isArray(folders)){ buildYearFilters(allData); renderPage(); return; }
         var promises = folders.filter(function(f){ return f.type==='dir'; }).map(function(folder){
           return fetch(folder.url,{headers:{'Accept':'application/vnd.github.v3+json'}})
             .then(function(r){ return r.ok ? r.json() : []; })
             .then(function(files){
               if(!Array.isArray(files)) return [];
-
-              // Separate JSON metadata files from actual submission files
-              var jsonFiles = {};
-              var submissionFiles = [];
+              var jsonMeta = {};
+              var pdfFiles = [];
               files.forEach(function(f){
-                if(/\.json$/i.test(f.name)) {
-                  var key = f.name.replace(/\.json$/i,'');
-                  jsonFiles[key] = f.download_url;
-                } else if(/\.(pdf|zip)$/i.test(f.name)) {
-                  submissionFiles.push(f);
-                }
+                if(/\.json$/i.test(f.name)) jsonMeta[f.name.replace(/\.json$/i,'')] = f.download_url;
+                else if(/\.(pdf|zip)$/i.test(f.name)) pdfFiles.push(f);
               });
-
-              // For each submission file, fetch its JSON if available
-              var itemPromises = submissionFiles.map(function(file){
+              var itemPromises = pdfFiles.map(function(file){
                 var base = file.name.replace(/\.(pdf|zip)$/i,'');
-                var jsonUrl = jsonFiles[base];
-
-                if(jsonUrl){
-                  // Has companion JSON — fetch metadata
-                  return fetch(jsonUrl)
-                    .then(function(r){ return r.ok ? r.json() : null; })
+                if(jsonMeta[base]){
+                  return fetch(jsonMeta[base]).then(function(r){ return r.ok?r.json():null; })
                     .then(function(meta){
-                      if(!meta) throw new Error('bad json');
-                      return {
-                        type:  meta.type  || 'file',
-                        year:  meta.year  || folder.name,
-                        title: meta.title || base.replace(/-/g,' '),
-                        desc:  meta.desc  || '',
-                        who:   meta.who   || 'Student',
-                        date:  meta.date  || folder.name,
-                        link:  meta.link  || file.download_url
-                      };
-                    })
-                    .catch(function(){
-                      // JSON fetch failed — fallback to filename
-                      return fallbackParse(file, folder.name);
-                    });
-                } else {
-                  // No JSON — parse from filename
-                  return Promise.resolve(fallbackParse(file, folder.name));
+                      if(!meta) return fallbackParse(file, folder.name);
+                      return {type:meta.type||'file',year:meta.year||folder.name,
+                        title:meta.title||base,desc:meta.desc||'',
+                        who:meta.who||'Student',date:meta.date||folder.name,
+                        link:meta.link||file.download_url};
+                    }).catch(function(){ return fallbackParse(file, folder.name); });
                 }
+                return Promise.resolve(fallbackParse(file, folder.name));
               });
-
               return Promise.all(itemPromises);
-            })
-            .catch(function(){ return []; });
+            }).catch(function(){ return []; });
         });
         return Promise.all(promises);
       })
@@ -631,16 +674,17 @@
         buildYearFilters(allData);
         renderPage();
       })
-      .catch(function(){ renderPage(); });
+      .catch(function(){ buildYearFilters(allData); renderPage(); });
 
     function fallbackParse(file, folderYear){
-      var base  = file.name.replace(/\.(pdf|zip)$/i,'');
+      var base = file.name.replace(/\.(pdf|zip)$/i,'');
       var parts = base.split('_');
-      var who   = parts.length > 1 ? parts[0].replace(/-/g,' ') : 'Student';
-      var title = parts.length > 1 ? parts.slice(1).join(' ').replace(/-/g,' ') : base.replace(/-/g,' ');
+      var who = parts.length>1 ? parts[0].replace(/-/g,' ') : 'Student';
+      var title = parts.length>1 ? parts.slice(1).join(' ').replace(/-/g,' ') : base.replace(/-/g,' ');
       return {type:'file',year:folderYear,title:title,desc:'',who:who,date:folderYear,link:file.download_url};
     }
   </script>
+
 
   <!-- Access Denied Modal -->
   <div id="accessDeniedModal" style="display:none;position:fixed;inset:0;background:rgba(10,16,32,0.85);z-index:99999;align-items:center;justify-content:center;padding:20px;">
