@@ -632,13 +632,20 @@
     // Init with inline data first, then augment with GitHub uploads
     buildYearFilters(allData);
     renderPage();
+
+    // Show fetch status
+    var fetchStatus = document.createElement('p');
+    fetchStatus.style.cssText = 'font-size:0.8em;color:var(--text-muted);margin-bottom:8px;';
+    fetchStatus.textContent = 'Checking for uploaded files...';
+    var grid = document.getElementById('cardsGrid');
+    if(grid && grid.parentNode) grid.parentNode.insertBefore(fetchStatus, grid);
     
     // Fetch uploaded files from GitHub submissions folder
     fetch('https://api.github.com/repos/University-of-Baghdad-College-of-AI/Big_Data_AI_Club_Students/contents/submissions',
       {headers:{'Accept':'application/vnd.github.v3+json','X-GitHub-Api-Version':'2022-11-28'}})
       .then(function(r){ return r.ok ? r.json() : []; })
       .then(function(folders){
-        if(!Array.isArray(folders)){ buildYearFilters(allData); renderPage(); return; }
+        if(!Array.isArray(folders)){ fetchStatus.textContent = ""; buildYearFilters(allData); renderPage(); return; }
         var promises = folders.filter(function(f){ return f.type==='dir'; }).map(function(folder){
           return fetch(folder.url,{headers:{'Accept':'application/vnd.github.v3+json'}})
             .then(function(r){ return r.ok ? r.json() : []; })
@@ -671,10 +678,14 @@
       })
       .then(function(groups){
         if(Array.isArray(groups)) groups.forEach(function(g){ if(Array.isArray(g)) allData=allData.concat(g); });
+        fetchStatus.textContent = '';
         buildYearFilters(allData);
         renderPage();
       })
-      .catch(function(){ buildYearFilters(allData); renderPage(); });
+      .catch(function(err){
+        fetchStatus.textContent = '';
+        buildYearFilters(allData); renderPage();
+      });
 
     function fallbackParse(file, folderYear){
       var base = file.name.replace(/\.(pdf|zip)$/i,'');
