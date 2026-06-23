@@ -406,93 +406,10 @@
     <p>Big Data Department | College of AI | University of Baghdad</p>
     <p style="margin-top:6px;"><a href="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/">&#8592; Back to Main Website</a></p>
   </footer>
-        <script>
-    var allData = [
-
-  {
-    "type"  : "research",
-    "year"  : "2026",
-    "title" : "Big Data Clustering Techniques",
-    "desc"  : "Novel clustering algorithms applied to large-scale educational datasets at the University of Baghdad.",
-    "who"   : "Ahmed Ali",
-    "date"  : "June 2026",
-    "link"  : "#"
-  },
-
-  {
-    "type"  : "ai",
-    "year"  : "2026",
-    "title" : "AI Hackathon Baghdad — 2nd Place",
-    "desc"  : "Innovative ML solution that won 2nd place at the National AI Hackathon 2026.",
-    "who"   : "Club Team",
-    "date"  : "June 2026",
-    "link"  : "#"
-  },
-
-  {
-    "type"  : "ai",
-    "year"  : "2026",
-    "title" : "Arabic Text Classification using Transformers",
-    "desc"  : "Parameter-efficient fine-tuning for classifying Arabic text across multiple domains.",
-    "who"   : "Sara Mohammed",
-    "date"  : "May 2026",
-    "link"  : "#"
-  },
-
-  {
-    "type"  : "software",
-    "year"  : "2025",
-    "title" : "Smart Campus IoT Dashboard",
-    "desc"  : "Real-time dashboard aggregating IoT sensor data from across the College of AI campus.",
-    "who"   : "Ali Hassan",
-    "date"  : "April 2025",
-    "link"  : "#"
-  },
-
-  {
-    "type"  : "data",
-    "year"  : "2025",
-    "title" : "Student Performance Predictive Analytics",
-    "desc"  : "Using academic records to predict student outcomes and provide early interventions.",
-    "who"   : "Noor Khalid",
-    "date"  : "March 2025",
-    "link"  : "#"
-  },
-
-  {
-    "type"  : "ai",
-    "year"  : "2024",
-    "title" : "Arabic Sentiment Analysis using BERT",
-    "desc"  : "Fine-tuned Arabic BERT model for sentiment classification on social media datasets.",
-    "who"   : "Club Members",
-    "date"  : "November 2024",
-    "link"  : "#"
-  },
-
-  {
-    "type"  : "software",
-    "year"  : "2024",
-    "title" : "Data Analysis Toolkit",
-    "desc"  : "Reusable Python tools for data cleaning, transformation, and visualization.",
-    "who"   : "Club Members",
-    "date"  : "September 2024",
-    "link"  : "#"
-  }
-
-];
-
+            <script>
+    var allData = [];
     var activeType = 'all', activeYear = 'all', searchQuery = '';
     var ITEMS_PER_PAGE = 9, currentPage = 1;
-
-    // Search input
-    var searchInput = document.getElementById('searchInput');
-    if(searchInput){
-      searchInput.addEventListener('input', function(){
-        searchQuery = this.value.toLowerCase().trim();
-        currentPage = 1;
-        renderPage();
-      });
-    }
 
     function buildYearFilters(data) {
       var years = [];
@@ -518,16 +435,11 @@
       });
     }
 
-    function applyFilters(){ currentPage=1; renderPage(); }
-
     function typeLabel(t){
-      var map={ml:'Machine Learning',bigdata:'Big Data',programming:'Programming',tools:'Tools',
-        ai:'AI',nlp:'NLP',bio:'Bioinformatics',ethics:'Ethics',data:'Data Science',
-        career:'Career',project:'Project',research:'Research',demo:'Demo',keynote:'Keynote',
-        trend:'Trend',industry:'Industry',discussion:'Discussion',national:'National',
-        international:'International',local:'Local',organized:'Organized',tech:'Tech Company',
-        lab:'Research Lab',uni:'University',gov:'Government',software:'Software',
-        publication:'Publication',lecture:'Lecture',workshop:'Workshop',resource:'Resource',file:'File'};
+      var map={research:'Research',software:'Software',data:'Data Analysis',ai:'AI Model',
+        publication:'Publication',lecture:'Lecture',workshop:'Workshop',resource:'Resource',
+        project:'Project',presentation:'Presentation',seminar:'Seminar',
+        conference:'Conference',file:'File'};
       return map[t]||t;
     }
 
@@ -537,31 +449,29 @@
       return text.replace(new RegExp('('+escaped+')', 'gi'), '<mark>$1</mark>');
     }
 
-    function cardHTML(d, idx){
-      var q = searchQuery;
-      return '<div class="card">' +
-        '<div class="card-badges">' +
-          '<span class="badge badge-'+(d.type||'file')+'">'+typeLabel(d.type||'file')+'</span>' +
-          '<span class="badge badge-year">'+(d.year||'')+'</span>' +
-        '</div>' +
-        '<h3>'+highlight(d.title||'', q)+'</h3>' +
-        '<p>'+highlight(d.desc||'', q)+'</p>' +
-        '<div class="card-meta">' +
-          '<span>&#128100; '+highlight(d.who||'', q)+'</span>' +
-          '<span>&#128197; '+(d.date||'')+'</span>' +
-        '</div>' +
-        '<button class="view-btn" data-idx="'+idx+'">View Details &#8594;</button>' +
-      '</div>';
-    }
-
     function matchesSearch(d){
       if(!searchQuery) return true;
+      return (d.title||'').toLowerCase().indexOf(searchQuery)!==-1 ||
+             (d.desc||'').toLowerCase().indexOf(searchQuery)!==-1 ||
+             (d.who||'').toLowerCase().indexOf(searchQuery)!==-1 ||
+             (d.year||'').toLowerCase().indexOf(searchQuery)!==-1;
+    }
+
+    function cardHTML(d, idx){
       var q = searchQuery;
-      return (d.title||'').toLowerCase().indexOf(q)!==-1 ||
-             (d.desc||'').toLowerCase().indexOf(q)!==-1 ||
-             (d.who||'').toLowerCase().indexOf(q)!==-1 ||
-             (d.type||'').toLowerCase().indexOf(q)!==-1 ||
-             (d.year||'').toLowerCase().indexOf(q)!==-1;
+      return '<div class="card">'+
+        '<div class="card-badges">'+
+          '<span class="badge badge-'+(d.type||'file')+'">'+typeLabel(d.type||'file')+'</span>'+
+          '<span class="badge badge-year">'+(d.year||'')+'</span>'+
+        '</div>'+
+        '<h3>'+highlight(d.title||'', q)+'</h3>'+
+        '<p>'+highlight(d.desc||'No description provided.', q)+'</p>'+
+        '<div class="card-meta">'+
+          '<span>&#128100; '+highlight(d.who||'—', q)+'</span>'+
+          '<span>&#128197; '+(d.date||d.year||'')+'</span>'+
+        '</div>'+
+        '<button class="view-btn" data-idx="'+idx+'">View Details &#8594;</button>'+
+      '</div>';
     }
 
     function renderPage(){
@@ -570,8 +480,7 @@
         if((activeType==='all'||d.type===activeType) &&
            (activeYear==='all'||d.year===activeYear) &&
            matchesSearch(d)){
-          matched.push(d);
-          matchedIdx.push(i);
+          matched.push(d); matchedIdx.push(i);
         }
       });
       var total = matched.length;
@@ -580,22 +489,19 @@
       var start = (currentPage-1)*ITEMS_PER_PAGE;
       var slice = matched.slice(start, start+ITEMS_PER_PAGE);
       var sliceIdx = matchedIdx.slice(start, start+ITEMS_PER_PAGE);
-
       var grid = document.getElementById('cardsGrid');
-      grid.innerHTML = slice.map(function(d,i){ return cardHTML(d, sliceIdx[i]); }).join('');
-
-      grid.querySelectorAll('.view-btn').forEach(function(btn){
-        btn.addEventListener('click', function(){
-          openModal(allData[parseInt(btn.dataset.idx)]);
+      if(total===0){
+        grid.innerHTML = '<p style="color:var(--text-muted);grid-column:1/-1;text-align:center;padding:40px;">No submissions yet.</p>';
+      } else {
+        grid.innerHTML = slice.map(function(d,i){ return cardHTML(d, sliceIdx[i]); }).join('');
+        grid.querySelectorAll('.view-btn').forEach(function(btn){
+          btn.addEventListener('click', function(){ openModal(allData[parseInt(btn.dataset.idx)]); });
         });
-      });
-
+      }
       var rc = document.getElementById('resultsCount');
-      if(rc) rc.innerHTML = '<strong>'+total+'</strong> result'+(total!==1?'s':'')+' found'+
+      if(rc) rc.innerHTML = '<strong>'+total+'</strong> submission'+(total!==1?'s':'')+' found'+
         (searchQuery?' for <em>"'+searchQuery+'"</em>':'')+
         (totalPages>1?' &nbsp;|&nbsp; Page '+currentPage+' of '+totalPages:'');
-      var nr = document.getElementById('noResults');
-      if(nr) nr.style.display = total===0?'block':'none';
       renderPagination(totalPages);
     }
 
@@ -622,13 +528,13 @@
       document.getElementById('modalTitle').textContent = d.title||'';
       document.getElementById('modalDesc').textContent  = d.desc||'No description available.';
       document.getElementById('modalWho').textContent   = d.who||'—';
-      document.getElementById('modalDate').textContent  = d.date||'—';
+      document.getElementById('modalDate').textContent  = d.date||d.year||'—';
       var lnk = document.getElementById('modalLink');
-      if(d.link && d.link!=='#'){
+      if(d.link&&d.link!=='#'){
         lnk.href=d.link; lnk.style.display='inline-flex'; lnk.onclick=null;
       } else {
         lnk.href='#'; lnk.style.display='inline-flex';
-        lnk.onclick=function(e){ e.preventDefault(); alert('No link available for this item yet.'); };
+        lnk.onclick=function(e){e.preventDefault();alert('No link available yet.');};
       }
       document.getElementById('modal').classList.add('open');
       document.body.style.overflow='hidden';
@@ -637,55 +543,132 @@
       document.getElementById('modal').classList.remove('open');
       document.body.style.overflow='';
     }
-    document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeModal(); });
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+
+    var searchInput = document.getElementById('searchInput');
+    if(searchInput){
+      searchInput.addEventListener('input', function(){
+        searchQuery = this.value.toLowerCase().trim();
+        currentPage = 1; renderPage();
+      });
+    }
 
     document.querySelectorAll('#typeFilters .filter-btn').forEach(function(btn){
       btn.addEventListener('click',function(){
         document.querySelectorAll('#typeFilters .filter-btn').forEach(function(b){b.classList.remove('active');});
-        btn.classList.add('active'); activeType=btn.dataset.type; applyFilters();
+        btn.classList.add('active'); activeType=btn.dataset.type; currentPage=1; renderPage();
       });
     });
 
-    var toggle=document.querySelector('.nav-toggle'), navLinks=document.querySelector('.nav-links');
-    if(toggle&&navLinks){
-      toggle.addEventListener('click',function(){navLinks.classList.toggle('open');});
-      document.querySelectorAll('.dropdown').forEach(function(dd){
-        dd.querySelector('.dropbtn').addEventListener('click',function(e){
-          if(window.innerWidth<=768){e.preventDefault();e.stopPropagation();dd.classList.toggle('open');}
-        });
-      });
-      document.querySelectorAll('.nav-links a').forEach(function(a){
-        a.addEventListener('click',function(){navLinks.classList.remove('open');});
-      });
-    }
+    // Fetch submissions from GitHub
+    // For each .json file found, use its metadata
+    // For .pdf/.zip without a matching .json, use filename parsing as fallback
+    document.getElementById('cardsGrid').innerHTML =
+      '<p style="color:var(--text-muted);font-size:.9em;padding:20px;">Loading submissions...</p>';
 
-    
     fetch('https://api.github.com/repos/University-of-Baghdad-College-of-AI/Big_Data_AI_Club_Students/contents/submissions',
-      {headers:{'Accept':'application/vnd.github.v3+json'}})
-      .then(function(r){return r.json();}).then(function(folders){
-        if(!Array.isArray(folders)) return;
-        var promises=folders.filter(function(f){return f.type==='dir';}).map(function(folder){
+      {headers:{'Accept':'application/vnd.github.v3+json','X-GitHub-Api-Version':'2022-11-28'}})
+      .then(function(r){ return r.ok ? r.json() : []; })
+      .then(function(folders){
+        if(!Array.isArray(folders)){ renderPage(); return; }
+        var promises = folders.filter(function(f){ return f.type==='dir'; }).map(function(folder){
           return fetch(folder.url,{headers:{'Accept':'application/vnd.github.v3+json'}})
-            .then(function(r){return r.json();}).then(function(files){
+            .then(function(r){ return r.ok ? r.json() : []; })
+            .then(function(files){
               if(!Array.isArray(files)) return [];
-              return files.filter(function(f){return f.type==='file';}).map(function(file){
-                var name=file.name.replace(/\.(pdf|zip)$/i,'').replace(/[-_]/g,' ');
-                var parts = file.name.replace(/\.(pdf|zip)$/i,'').split('_');
-                var who = parts.length > 1 ? parts[0].replace(/-/g,' ') : 'Student';
-                var title = parts.length > 1 ? parts.slice(1).join(' ').replace(/-/g,' ') : parts[0].replace(/-/g,' ');
-                return {type:'file',year:folder.name,title:title,desc:'Uploaded file by '+who+': '+file.name,who:who,date:folder.name,link:file.download_url};
+
+              // Separate JSON metadata files from actual submission files
+              var jsonFiles = {};
+              var submissionFiles = [];
+              files.forEach(function(f){
+                if(/\.json$/i.test(f.name)) {
+                  var key = f.name.replace(/\.json$/i,'');
+                  jsonFiles[key] = f.download_url;
+                } else if(/\.(pdf|zip)$/i.test(f.name)) {
+                  submissionFiles.push(f);
+                }
               });
-            });
+
+              // For each submission file, fetch its JSON if available
+              var itemPromises = submissionFiles.map(function(file){
+                var base = file.name.replace(/\.(pdf|zip)$/i,'');
+                var jsonUrl = jsonFiles[base];
+
+                if(jsonUrl){
+                  // Has companion JSON — fetch metadata
+                  return fetch(jsonUrl)
+                    .then(function(r){ return r.ok ? r.json() : null; })
+                    .then(function(meta){
+                      if(!meta) throw new Error('bad json');
+                      return {
+                        type:  meta.type  || 'file',
+                        year:  meta.year  || folder.name,
+                        title: meta.title || base.replace(/-/g,' '),
+                        desc:  meta.desc  || '',
+                        who:   meta.who   || 'Student',
+                        date:  meta.date  || folder.name,
+                        link:  meta.link  || file.download_url
+                      };
+                    })
+                    .catch(function(){
+                      // JSON fetch failed — fallback to filename
+                      return fallbackParse(file, folder.name);
+                    });
+                } else {
+                  // No JSON — parse from filename
+                  return Promise.resolve(fallbackParse(file, folder.name));
+                }
+              });
+
+              return Promise.all(itemPromises);
+            })
+            .catch(function(){ return []; });
         });
         return Promise.all(promises);
-      }).then(function(groups){
-        if(Array.isArray(groups)) groups.forEach(function(g){if(Array.isArray(g)) allData=allData.concat(g);});
-        buildYearFilters(allData); renderPage();
-      }).catch(function(){});
+      })
+      .then(function(groups){
+        if(Array.isArray(groups)) groups.forEach(function(g){ if(Array.isArray(g)) allData=allData.concat(g); });
+        buildYearFilters(allData);
+        renderPage();
+      })
+      .catch(function(){ renderPage(); });
 
-    buildYearFilters(allData);
-    renderPage();
+    function fallbackParse(file, folderYear){
+      var base  = file.name.replace(/\.(pdf|zip)$/i,'');
+      var parts = base.split('_');
+      var who   = parts.length > 1 ? parts[0].replace(/-/g,' ') : 'Student';
+      var title = parts.length > 1 ? parts.slice(1).join(' ').replace(/-/g,' ') : base.replace(/-/g,' ');
+      return {type:'file',year:folderYear,title:title,desc:'',who:who,date:folderYear,link:file.download_url};
+    }
   </script>
+
+  <!-- Access Denied Modal -->
+  <div id="accessDeniedModal" style="display:none;position:fixed;inset:0;background:rgba(10,16,32,0.85);z-index:99999;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#fff;border-radius:14px;max-width:420px;width:100%;padding:36px 32px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+      <div style="font-size:3em;margin-bottom:12px;">&#128683;</div>
+      <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.3em;font-weight:800;color:#1A2340;margin-bottom:8px;">Access Denied</h3>
+      <p style="font-size:0.92em;color:#5E6E8A;margin-bottom:6px;line-height:1.6;">Your account</p>
+      <p style="font-size:0.95em;font-weight:700;color:#C62828;margin-bottom:16px;word-break:break-all;" id="deniedEmailModal"></p>
+      <p style="font-size:0.88em;color:#5E6E8A;line-height:1.6;margin-bottom:24px;">is not on the approved list.<br>Please contact the <strong style="color:#1A2340;">Club Manager</strong> to request access.</p>
+      <button onclick="document.getElementById('accessDeniedModal').style.display='none'"
+        style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.92em;color:#fff;background:#0F1F3D;border:none;border-radius:8px;padding:12px 32px;cursor:pointer;width:100%;">Close</button>
+    </div>
+  </div>
+
+  <!-- Sign Out Confirmation Modal -->
+  <div id="signOutModal" style="display:none;position:fixed;inset:0;background:rgba(10,16,32,0.85);z-index:99999;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#fff;border-radius:14px;max-width:380px;width:100%;padding:36px 32px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+      <div style="font-size:2.8em;margin-bottom:12px;">&#128274;</div>
+      <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.2em;font-weight:800;color:#1A2340;margin-bottom:10px;">Sign Out</h3>
+      <p style="font-size:0.9em;color:#5E6E8A;line-height:1.6;margin-bottom:24px;">Are you sure you want to sign out?</p>
+      <div style="display:flex;gap:10px;">
+        <button onclick="document.getElementById('signOutModal').style.display='none'"
+          style="flex:1;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.92em;color:#1A2340;background:#F4F6FA;border:1.5px solid #E2E7F0;border-radius:8px;padding:11px;cursor:pointer;">Cancel</button>
+        <button id="confirmSignOutBtn"
+          style="flex:1;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.92em;color:#fff;background:#C62828;border:none;border-radius:8px;padding:11px;cursor:pointer;">Sign Out</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Firebase Auth Topbar -->
   <script src="https://university-of-baghdad-college-of-ai.github.io/Big_Data_AI_Club_Baghdad/approved-users.js"></script>
@@ -693,7 +676,6 @@
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
     import { getAuth, signInWithPopup, GoogleAuthProvider, signOut as fbSignOut, onAuthStateChanged }
       from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-
     const firebaseConfig = {
       apiKey: "AIzaSyArF59_11UVHPo9yZW5zg2RYQWaKjIZXYw",
       authDomain: "bigdataaiclub.firebaseapp.com",
@@ -702,122 +684,61 @@
       messagingSenderId: "877020220761",
       appId: "1:877020220761:web:6c6dcc22b63fcd2ec15048"
     };
-    const app      = initializeApp(firebaseConfig);
-    const auth     = getAuth(app);
-    const provider = new GoogleAuthProvider();
-
-    var ROLE_CONFIG = {
-      admin:     { label: '&#9881; Admin',       style: 'background:#1A2340;color:#F8C200;border:1px solid #F8C200;' },
-      professor: { label: '&#128218; Professor',  style: 'background:#FFF8EC;color:#9a6f00;' },
-      student:   { label: '&#127891; Student',    style: 'background:#EEF2FF;color:#4361EE;' },
-      employee:  { label: '&#128084; Employee',   style: 'background:#E8F5E9;color:#2E7D32;' },
-      test:      { label: '&#128295; Test',       style: 'background:#F3E5F5;color:#6A1B9A;' },
+    const app=initializeApp(firebaseConfig), auth=getAuth(app), provider=new GoogleAuthProvider();
+    var ROLE_CONFIG={
+      admin:{label:'&#9881; Admin',style:'background:#1A2340;color:#F8C200;border:1px solid #F8C200;'},
+      professor:{label:'&#128218; Professor',style:'background:#FFF8EC;color:#9a6f00;'},
+      student:{label:'&#127891; Student',style:'background:#EEF2FF;color:#4361EE;'},
+      employee:{label:'&#128084; Employee',style:'background:#E8F5E9;color:#2E7D32;'},
+      test:{label:'&#128295; Test',style:'background:#F3E5F5;color:#6A1B9A;'},
     };
-    function showSignedIn(user, role) {
-      document.getElementById('tbNotSigned').style.display = 'none';
-      var si = document.getElementById('tbSignedIn');
-      si.style.display = 'flex';
-      document.getElementById('tbAvatar').src = user.photoURL || '';
-      document.getElementById('tbName').textContent = user.displayName || user.email;
-      var roleEl = document.getElementById('tbRole');
-      var cfg = ROLE_CONFIG[role] || { label: role, style: '' };
-      roleEl.innerHTML = cfg.label;
-      roleEl.className = 'tb-role';
-      roleEl.style.cssText = cfg.style + 'font-size:0.78em;font-weight:700;padding:2px 9px;border-radius:20px;letter-spacing:0.05em;';
+    function showSignedIn(user,role){
+      document.getElementById('tbNotSigned').style.display='none';
+      var si=document.getElementById('tbSignedIn'); si.style.display='flex';
+      document.getElementById('tbAvatar').src=user.photoURL||'';
+      document.getElementById('tbName').textContent=user.displayName||user.email;
+      var roleEl=document.getElementById('tbRole');
+      var cfg=ROLE_CONFIG[role]||{label:role,style:''};
+      roleEl.innerHTML=cfg.label; roleEl.className='tb-role';
+      roleEl.style.cssText=cfg.style+'font-size:0.78em;font-weight:700;padding:2px 9px;border-radius:20px;letter-spacing:0.05em;';
     }
-    function showSignedOut() {
-      document.getElementById('tbNotSigned').style.display = 'flex';
-      document.getElementById('tbSignedIn').style.display = 'none';
+    function showSignedOut(){
+      document.getElementById('tbNotSigned').style.display='flex';
+      document.getElementById('tbSignedIn').style.display='none';
     }
-    window.openSignInPopup = function() {
+    window.openSignInPopup=function(){
       document.getElementById('tbPopupOverlay').classList.add('open');
-      document.getElementById('tbAccessDenied').style.display = 'none';
-      document.getElementById('tbGoogleBtn').style.display = 'flex';
-      document.getElementById('tbSpinner').style.display = 'none';
+      document.getElementById('tbAccessDenied').style.display='none';
+      document.getElementById('tbGoogleBtn').style.display='flex';
+      document.getElementById('tbSpinner').style.display='none';
     };
-    window.closeSignInPopup = function() {
-      document.getElementById('tbPopupOverlay').classList.remove('open');
-    };
-    window.tbSignIn = function() {
-      document.getElementById('tbSpinner').style.display = 'block';
-      document.getElementById('tbGoogleBtn').style.display = 'none';
-      document.getElementById('tbAccessDenied').style.display = 'none';
-      signInWithPopup(auth, provider)
-        .then(function() { closeSignInPopup(); })
-        .catch(function() {
-          document.getElementById('tbSpinner').style.display = 'none';
-          document.getElementById('tbGoogleBtn').style.display = 'flex';
-        });
-    };
-    window.tbSignOut = function() {
-      document.getElementById('signOutModal').style.display = 'flex';
-    };
-    document.getElementById('confirmSignOutBtn').addEventListener('click', function() {
-      document.getElementById('signOutModal').style.display = 'none';
-      fbSignOut(auth).then(function() {
-        showSignedOut();
-        if (typeof lockForm === 'function') lockForm();
+    window.closeSignInPopup=function(){document.getElementById('tbPopupOverlay').classList.remove('open');};
+    window.tbSignIn=function(){
+      document.getElementById('tbSpinner').style.display='block';
+      document.getElementById('tbGoogleBtn').style.display='none';
+      document.getElementById('tbAccessDenied').style.display='none';
+      signInWithPopup(auth,provider).then(function(){closeSignInPopup();}).catch(function(){
+        document.getElementById('tbSpinner').style.display='none';
+        document.getElementById('tbGoogleBtn').style.display='flex';
       });
+    };
+    window.tbSignOut=function(){document.getElementById('signOutModal').style.display='flex';};
+    document.getElementById('confirmSignOutBtn').addEventListener('click',function(){
+      document.getElementById('signOutModal').style.display='none';
+      fbSignOut(auth).then(function(){showSignedOut();});
     });
-    onAuthStateChanged(auth, function(user) {
-      if (user) {
-        var role = window.APPROVED_USERS ? window.APPROVED_USERS[user.email] : null;
-        if (role) {
-          showSignedIn(user, role);
-          closeSignInPopup();
-          if (typeof unlockForm === 'function') unlockForm(user, role);
-        } else {
+    onAuthStateChanged(auth,function(user){
+      if(user){
+        var role=window.APPROVED_USERS?window.APPROVED_USERS[user.email]:null;
+        if(role){showSignedIn(user,role);closeSignInPopup();}
+        else{
           showSignedOut();
-          document.getElementById('tbSpinner').style.display = 'none';
-          document.getElementById('tbGoogleBtn').style.display = 'flex';
-          // Show access denied modal
-          document.getElementById('deniedEmailModal').textContent = user.email;
-          document.getElementById('accessDeniedModal').style.display = 'flex';
-          closeSignInPopup();
-          fbSignOut(auth);
+          document.getElementById('deniedEmailModal').textContent=user.email;
+          document.getElementById('accessDeniedModal').style.display='flex';
+          closeSignInPopup(); fbSignOut(auth);
         }
-      } else {
-        showSignedOut();
-        if (typeof lockForm === 'function') lockForm();
-      }
+      } else { showSignedOut(); }
     });
   </script>
-
-  <!-- Access Denied Modal -->
-  <div id="accessDeniedModal" style="display:none;position:fixed;inset:0;background:rgba(10,16,32,0.85);z-index:99999;align-items:center;justify-content:center;padding:20px;">
-    <div style="background:#fff;border-radius:14px;max-width:420px;width:100%;padding:36px 32px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);animation:popIn 0.25s ease;">
-      <div style="font-size:3em;margin-bottom:12px;">&#128683;</div>
-      <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.3em;font-weight:800;color:#1A2340;margin-bottom:8px;">Access Denied</h3>
-      <p style="font-size:0.92em;color:#5E6E8A;margin-bottom:6px;line-height:1.6;">Your account</p>
-      <p style="font-size:0.95em;font-weight:700;color:#C62828;margin-bottom:16px;word-break:break-all;" id="deniedEmailModal"></p>
-      <p style="font-size:0.88em;color:#5E6E8A;line-height:1.6;margin-bottom:24px;">is not on the approved list.<br>Please contact the <strong style="color:#1A2340;">Club Manager</strong> to request access.</p>
-      <button onclick="document.getElementById('accessDeniedModal').style.display='none'" 
-        style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.92em;color:#fff;background:#0F1F3D;border:none;border-radius:8px;padding:12px 32px;cursor:pointer;width:100%;transition:background 0.2s;"
-        onmouseover="this.style.background='#1e3a6e'" onmouseout="this.style.background='#0F1F3D'">
-        Close
-      </button>
-    </div>
-  </div>
-
-  <!-- Sign Out Confirmation Modal -->
-  <div id="signOutModal" style="display:none;position:fixed;inset:0;background:rgba(10,16,32,0.85);z-index:99999;align-items:center;justify-content:center;padding:20px;">
-    <div style="background:#fff;border-radius:14px;max-width:380px;width:100%;padding:36px 32px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);animation:popIn 0.25s ease;">
-      <div style="font-size:2.8em;margin-bottom:12px;">&#128274;</div>
-      <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.2em;font-weight:800;color:#1A2340;margin-bottom:10px;">Sign Out</h3>
-      <p style="font-size:0.9em;color:#5E6E8A;line-height:1.6;margin-bottom:24px;">Are you sure you want to sign out?</p>
-      <div style="display:flex;gap:10px;">
-        <button onclick="document.getElementById('signOutModal').style.display='none'"
-          style="flex:1;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.92em;color:#1A2340;background:#F4F6FA;border:1.5px solid #E2E7F0;border-radius:8px;padding:11px;cursor:pointer;transition:background 0.2s;"
-          onmouseover="this.style.background='#E2E7F0'" onmouseout="this.style.background='#F4F6FA'">
-          Cancel
-        </button>
-        <button id="confirmSignOutBtn"
-          style="flex:1;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.92em;color:#fff;background:#C62828;border:none;border-radius:8px;padding:11px;cursor:pointer;transition:background 0.2s;"
-          onmouseover="this.style.background='#B71C1C'" onmouseout="this.style.background='#C62828'">
-          Sign Out
-        </button>
-      </div>
-    </div>
-  </div>
 </body>
 </html>
