@@ -422,7 +422,7 @@
   {
     "type"  : "ai",
     "year"  : "2026",
-    "title" : "AI Hackathon Baghdad - 2nd Place",
+    "title" : "AI Hackathon Baghdad — 2nd Place",
     "desc"  : "Innovative ML solution that won 2nd place at the National AI Hackathon 2026.",
     "who"   : "Club Team",
     "date"  : "June 2026",
@@ -434,48 +434,48 @@
     "year"  : "2026",
     "title" : "Arabic Text Classification using Transformers",
     "desc"  : "Parameter-efficient fine-tuning for classifying Arabic text across multiple domains using BERT adapters.",
-    "who"   : "Ali Mohammed",
+    "who"   : "Sara Mohammed",
     "date"  : "May 2026",
     "link"  : "#"
   },
 
   {
     "type"  : "software",
-    "year"  : "2026",
+    "year"  : "2025",
     "title" : "Smart Campus IoT Dashboard",
     "desc"  : "Real-time dashboard aggregating IoT sensor data from across the College of AI campus facilities.",
     "who"   : "Ali Hassan",
-    "date"  : "April 2026",
+    "date"  : "April 2025",
     "link"  : "#"
   },
 
   {
     "type"  : "data",
-    "year"  : "2026",
+    "year"  : "2025",
     "title" : "Student Performance Predictive Analytics",
     "desc"  : "Using academic records to predict student outcomes and provide early intervention recommendations.",
-    "who"   : "Ahmed Jasim",
-    "date"  : "March 2026",
+    "who"   : "Noor Khalid",
+    "date"  : "March 2025",
     "link"  : "#"
   },
 
   {
     "type"  : "ai",
-    "year"  : "2025",
+    "year"  : "2024",
     "title" : "Arabic Sentiment Analysis using BERT",
     "desc"  : "Fine-tuned Arabic BERT model for sentiment classification on social media datasets.",
     "who"   : "Club Members",
-    "date"  : "November 2025",
+    "date"  : "November 2024",
     "link"  : "#"
   },
 
   {
     "type"  : "software",
-    "year"  : "2025",
+    "year"  : "2024",
     "title" : "Data Analysis Toolkit",
     "desc"  : "Reusable Python tools for data cleaning, transformation, and visualization for data science workflows.",
     "who"   : "Club Members",
-    "date"  : "September 2025",
+    "date"  : "September 2024",
     "link"  : "#"
   }
 
@@ -558,6 +558,18 @@
           matched.push(d); matchedIdx.push(i);
         }
       });
+      // Sort newest first
+      var combined = matched.map(function(d,i){ return {d:d, idx:matchedIdx[i]}; });
+      combined.sort(function(a,b){
+        var ay=parseInt(a.d.year)||0, by=parseInt(b.d.year)||0;
+        if(by!==ay) return by-ay;
+        var months={january:1,february:2,march:3,april:4,may:5,june:6,
+                    july:7,august:8,september:9,october:10,november:11,december:12};
+        function mn(s){ var p=(s||'').toLowerCase().split(' '); return months[p[0]]||0; }
+        return mn(b.d.date)-mn(a.d.date);
+      });
+      matched = combined.map(function(c){ return c.d; });
+      matchedIdx = combined.map(function(c){ return c.idx; });
       var total=matched.length, totalPages=Math.max(1,Math.ceil(total/ITEMS_PER_PAGE));
       if(currentPage>totalPages) currentPage=totalPages;
       var start=(currentPage-1)*ITEMS_PER_PAGE;
