@@ -145,7 +145,7 @@
       padding: 0 1px;
     }
   
-    /* ââ Auth Top Bar ââ */
+    /* ── Auth Top Bar ── */
     .auth-topbar {
       background: var(--navy);
       padding: 8px 24px;
@@ -172,7 +172,7 @@
     .tb-signout:hover { background: rgba(255,255,255,0.22); color: #fff; }
     @media(max-width:768px){ .auth-topbar{ padding: 7px 14px; } .auth-topbar .tb-name{ display:none; } }
   
-    /* ââ Auth Top Bar ââ */
+    /* ── Auth Top Bar ── */
     .auth-topbar {
       background: var(--navy, #0F1F3D);
       padding: 8px 24px;
@@ -302,7 +302,7 @@
   </style>
 </head>
 <body>
-  <!-- ââ AUTH TOP BAR ââ -->
+  <!-- ── AUTH TOP BAR ── -->
   <div class="auth-topbar">
     <div class="not-signed" id="tbNotSigned">
       <span>Not signed in</span>
@@ -422,7 +422,7 @@
   {
     "type"  : "ai",
     "year"  : "2026",
-    "title" : "AI Hackathon Baghdad â 2nd Place",
+    "title" : "AI Hackathon Baghdad - 2nd Place",
     "desc"  : "Innovative ML solution that won 2nd place at the National AI Hackathon 2026.",
     "who"   : "Club Team",
     "date"  : "June 2026",
@@ -456,16 +456,6 @@
     "desc"  : "Using academic records to predict student outcomes and provide early intervention recommendations.",
     "who"   : "Noor Khalid",
     "date"  : "March 2025",
-    "link"  : "#"
-  },
-
-  {
-    "type"  : "ai",
-    "year"  : "2024",
-    "title" : "Arabic Sentiment Analysis using BERT",
-    "desc"  : "Fine-tuned Arabic BERT model for sentiment classification on social media datasets.",
-    "who"   : "Club Members",
-    "date"  : "November 2024",
     "link"  : "#"
   }
 
@@ -533,7 +523,7 @@
         '<h3>'+highlight(d.title||'', q)+'</h3>'+
         '<p>'+highlight(d.desc||'No description provided.', q)+'</p>'+
         '<div class="card-meta">'+
-          '<span>&#128100; '+highlight(d.who||'â', q)+'</span>'+
+          '<span>&#128100; '+highlight(d.who||'—', q)+'</span>'+
           '<span>&#128197; '+(d.date||d.year||'')+'</span>'+
         '</div>'+
         '<button class="view-btn" data-idx="'+idx+'">View Details &#8594;</button>'+
@@ -601,8 +591,8 @@
         '<span class="badge badge-year">'+(d.year||'')+'</span>';
       document.getElementById('modalTitle').textContent=d.title||'';
       document.getElementById('modalDesc').textContent=d.desc||'No description available.';
-      document.getElementById('modalWho').textContent=d.who||'â';
-      document.getElementById('modalDate').textContent=d.date||d.year||'â';
+      document.getElementById('modalWho').textContent=d.who||'—';
+      document.getElementById('modalDate').textContent=d.date||d.year||'—';
       var lnk=document.getElementById('modalLink');
       if(d.link&&d.link!=='#'){lnk.href=d.link;lnk.style.display='inline-flex';lnk.onclick=null;}
       else{lnk.href='#';lnk.style.display='inline-flex';
