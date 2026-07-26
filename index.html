@@ -570,26 +570,23 @@
       document.getElementById('modalDesc').textContent=d.desc||'No description available.';
       document.getElementById('modalWho').textContent=d.who||'—';
       document.getElementById('modalDate').textContent=d.date||d.year||'—';
-      var lnk=document.getElementById('modalLink');
-      // View Details - only show if link exists and is NOT a file
+            var lnk=document.getElementById('modalLink');
       var linkIsFile = d.link && (d.link.toLowerCase().endsWith('.pdf')||d.link.toLowerCase().endsWith('.zip')||d.link.toLowerCase().endsWith('.docx'));
-      if(d.link&&d.link!=='#'&&!linkIsFile){
-        lnk.href=d.link;lnk.style.display='inline-flex';lnk.onclick=null;
+      var hasRealLink = d.link && d.link !== '#' && d.link !== '' && !linkIsFile;
+      if(hasRealLink){
+        lnk.href=d.link; lnk.style.display='inline-flex'; lnk.onclick=null;
       } else {
         lnk.style.display='none';
       }
-      // View File button - use d.file first, fallback to d.link if it's a file
       var existingFileBtn2 = document.getElementById('modalFileBtn');
-      if (existingFileBtn2) existingFileBtn2.remove();
-      var fileUrl = d.file || (linkIsFile ? d.link : null);
-      if (fileUrl) {
-        var fileBtn2 = document.createElement('a');
-        fileBtn2.id = 'modalFileBtn';
-        fileBtn2.href = fileUrl;
-        fileBtn2.target = '_blank';
-        fileBtn2.className = 'modal-link';
-        fileBtn2.style.cssText = 'background:#1B5E20;color:#fff;margin-top:8px;margin-left:8px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-weight:600;font-size:.88em;';
-        fileBtn2.innerHTML = '📄 View File';
+      if(existingFileBtn2) existingFileBtn2.remove();
+      var fileUrl = (d.file && d.file !== '') ? d.file : (linkIsFile ? d.link : null);
+      if(fileUrl){
+        var fileBtn2=document.createElement('a');
+        fileBtn2.id='modalFileBtn'; fileBtn2.href=fileUrl; fileBtn2.target='_blank';
+        fileBtn2.className='modal-link';
+        fileBtn2.style.cssText='background:#1B5E20;color:#fff;margin-top:8px;margin-left:8px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-weight:600;font-size:.88em;';
+        fileBtn2.innerHTML='📄 View File';
         lnk.parentNode.appendChild(fileBtn2);
       }
       document.getElementById('modal').classList.add('open');
