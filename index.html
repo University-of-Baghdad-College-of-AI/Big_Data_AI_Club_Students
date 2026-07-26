@@ -664,7 +664,7 @@
               var jsonMeta = {};
               var pdfFiles = [];
               files.forEach(function(f){
-                if(/\.json$/i.test(f.name)) jsonMeta[f.name.replace(/\.json$/i,'')] = f.download_url.replace('https://raw.githubusercontent.com/University-of-Baghdad-College-of-AI/','https://university-of-baghdad-college-of-ai.github.io/').replace('/main/','/').replace('/refs/heads/main/','/') ;
+                if(/\.json$/i.test(f.name)) jsonMeta[f.name.replace(/\.json$/i,'')] = f.download_url.replace('https://raw.githubusercontent.com/University-of-Baghdad-College-of-AI/','https://university-of-baghdad-college-of-ai.github.io/').replace('/main/','/').replace('/refs/heads/main/', '/').replace('https://raw.githubusercontent.com/University-of-Baghdad-College-of-AI/','https://university-of-baghdad-college-of-ai.github.io/').replace('/main/','/').replace('/refs/heads/main/','/') ;
                 else if(/\.(pdf|zip)$/i.test(f.name)) pdfFiles.push(f);
               });
               var itemPromises = pdfFiles.map(function(file){
@@ -676,7 +676,7 @@
                       return {type:meta.type||'file',year:meta.year||folder.name,
                         title:meta.title||base,desc:meta.desc||'',
                         who:meta.who||'Student',date:meta.date||folder.name,
-                        link:meta.link||file.download_url};
+                        link:meta.link||(file.download_url.replace('https://raw.githubusercontent.com/University-of-Baghdad-College-of-AI/','https://university-of-baghdad-college-of-ai.github.io/').replace('/main/','/'))};
                     }).catch(function(){ return fallbackParse(file, folder.name); });
                 }
                 return Promise.resolve(fallbackParse(file, folder.name));
