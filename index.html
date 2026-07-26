@@ -498,7 +498,7 @@
           '<span class="badge badge-year">'+(d.year||'')+'</span>'+
         '</div>'+
         '<h3>'+highlight(d.title||'', q)+'</h3>'+
-        '<p>'+highlight(d.desc||'No description provided.', q)+'</p>'+
+        '<p style="display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;">'+highlight(d.desc||'No description provided.', q)+'</p>'+
         '<div class="card-meta">'+
           '<span>&#128100; '+highlight(d.who||'—', q)+'</span>'+
           '<span>&#128197; '+(d.date||d.year||'')+'</span>'+
@@ -570,9 +570,10 @@
       document.getElementById('modalDesc').textContent=d.desc||'No description available.';
       document.getElementById('modalWho').textContent=d.who||'—';
       document.getElementById('modalDate').textContent=d.date||d.year||'—';
-            var lnk=document.getElementById('modalLink');
+                  var lnk=document.getElementById('modalLink');
       var linkIsFile = d.link && (d.link.toLowerCase().endsWith('.pdf')||d.link.toLowerCase().endsWith('.zip')||d.link.toLowerCase().endsWith('.docx'));
-      var hasRealLink = d.link && d.link !== '#' && d.link !== '' && !linkIsFile;
+      var fileUrl = (d.file && d.file !== '') ? d.file : (linkIsFile ? d.link : null);
+      var hasRealLink = d.link && d.link !== '#' && d.link !== '' && !linkIsFile && d.link !== fileUrl;
       if(hasRealLink){
         lnk.href=d.link; lnk.style.display='inline-flex'; lnk.onclick=null;
       } else {
@@ -580,7 +581,6 @@
       }
       var existingFileBtn2 = document.getElementById('modalFileBtn');
       if(existingFileBtn2) existingFileBtn2.remove();
-      var fileUrl = (d.file && d.file !== '') ? d.file : (linkIsFile ? d.link : null);
       if(fileUrl){
         var fileBtn2=document.createElement('a');
         fileBtn2.id='modalFileBtn'; fileBtn2.href=fileUrl; fileBtn2.target='_blank';
